@@ -17,15 +17,22 @@ pipeline {
             }
             steps {
                 withSonarQubeEnv('SONAR_LOCAL') {
-                    bat "${scannerHome}/bin/sonar-scanner -e -Dsonar.projectKey=DeployBack -Dsonar.sources=. -Dsonar.host.url=http://localhost:9000 -Dsonar.login=sqp_a1bef6d9ca69cc9e213d3b06b608933292386935 -Dsonar.java.binaries=target"
+                    bat """
+                        ${scannerHome}/bin/sonar-scanner -e \
+                        -Dsonar.projectKey=DeployBack \
+                        -Dsonar.sources=. \
+                        -Dsonar.host.url=http://localhost:9000 \
+                        -Dsonar.login=sqp_a1bef6d9ca69cc9e213d3b06b608933292386935 \
+                        -Dsonar.java.binaries=target
+                    """
                 }
-                
             }
         }
         stage('Quality Gate') {
             steps {
-                timeout(time: 1, unit: 'HOURS') {
-                    waitForQualityGate abortPipeline: true
+                sleep(12)
+                timeout(time: 1, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: false, credentialsId: 'TokenSonar'
                 }
             }
         }

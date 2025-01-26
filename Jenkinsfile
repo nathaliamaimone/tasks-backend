@@ -84,7 +84,7 @@ pipeline {
     post {
         always {
             junit allowEmptyResults: true, stdioRetention: '', testResults: 'target/surefire-reports/*.xml, api-test/target/surefire-reports/*.xml, functional-test/target/surefire-reports/*.xml, functional-test/target/failsafe-reports/*.xml'
-            archiveArtifacts artifacts: 'target/tasks-backend.war, frontend/target/tasks.war', followSymlinks: false
+            archiveArtifacts artifacts: 'target/tasks-backend.war, tasks-frontend/target/tasks.war', followSymlinks: false
             
         }
         unsuccessful {

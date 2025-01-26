@@ -80,5 +80,24 @@ pipeline {
                 }
             }
         }
-    }    
+    }
+    post {
+        always {
+            junit allowEmptyResults: true, 
+                  testResults: '''
+                      target/surefire-reports/*.xml,
+                      api-test/target/surefire-reports/*.xml,
+                      functional-test/target/surefire-reports/*.xml,
+                      functional-test/target/failsafe-reports/*.xml,
+                      tasks-frontend/target/surefire-reports/*.xml,
+                      tasks-backend/target/surefire-reports/*.xml
+                  '''
+        }
+        unsuccessful {
+            emailext attachLog: true, body: 'See the attached log for details', subject: 'Build $BUILD_NUMBER has failed', to: 'nathaliamaimone.qa@gmail.com'
+        }
+        fixed {
+            emailext attachLog: true, body: 'See the attached log for details', subject: 'Build $BUILD_NUMBER is fine!', to: 'nathaliamaimone.qa@gmail.com'
+        }
+    }
 }
